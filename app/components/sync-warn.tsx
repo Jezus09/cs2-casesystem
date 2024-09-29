@@ -1,0 +1,28 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Ian Lucas. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ClientOnly } from "remix-utils/client-only";
+import { didUserAuthenticateInThisBrowser } from "~/utils/user-cached-data";
+import { useLocalize, useUser } from "./app-context";
+
+export function SyncWarn() {
+  const user = useUser();
+  const localize = useLocalize();
+
+  return (
+    <ClientOnly
+      children={() =>
+        user === undefined && didUserAuthenticateInThisBrowser() ? (
+          <div className="flex select-none items-center justify-center gap-4 bg-red-500/50 px-4 py-2 text-sm text-white lg:gap-2 lg:px-0 lg:text-sm lg:font-bold">
+            <FontAwesomeIcon icon={faExclamationTriangle} className="h-4" />
+            {localize("SyncWarnText")}
+          </div>
+        ) : null
+      }
+    />
+  );
+}
